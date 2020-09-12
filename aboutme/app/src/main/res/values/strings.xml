@@ -2,4 +2,33 @@
     <string name="app_name">About me</string>
     <string name="name_text">Daniel Ferraz do Prado</string>
     <string name="yellow_star">Yellow start</string>
+    <string name="what_is_your_nickname">What is your nickname?</string>
+    <string name="bio_text">
+        I\'m an developer. I know C/C++, PHP, JavaScript, Delphi and now I learning Kotlin + Android!
+        \n
+        \n
+        I love to go out for launch. I\'m very happy and always have a big smile on my face - this is why everyone calls me "Sorriso".
+        \n
+        \n
+        I\'m very empolgated with this Android course and all possibilities it can bring to me!
+        \n\n
+        Bla bla bla!
+        \n\n
+        Bla bla bla!
+        \n\n
+        Bla bla bla!
+        \n\n
+        Bla bla bla!
+        \n\n
+        Bla bla bla!
+        \n\n
+        Bla bla bla!
+        \n\n
+        Bla bla bla!
+        \n\n
+        Bla bla bla!
+        \n\n
+        Bla bla bla!
+    </string>
+    <string name="done">done</string>
 </resources>
