@@ -30,7 +30,7 @@
         android:hint="@string/what_is_your_nickname"
         android:inputType="textPersonName"
         android:singleLine="true"
-        android:text=""
+        android:text="@={myName.nickname}"
         android:textAlignment="center" />
 
     <Button
