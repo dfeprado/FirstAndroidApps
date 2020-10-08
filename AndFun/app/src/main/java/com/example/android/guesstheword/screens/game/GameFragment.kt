@@ -16,11 +16,15 @@
 
 package com.example.android.guesstheword.screens.game
 
+import android.os.Build
 import android.os.Bundle
+import android.os.VibrationEffect
+import android.os.Vibrator
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.getSystemService
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -28,7 +32,6 @@ import androidx.navigation.fragment.NavHostFragment.findNavController
 import com.example.android.guesstheword.R
 import com.example.android.guesstheword.databinding.GameFragmentBinding
 import androidx.lifecycle.ViewModelProviders;
-import kotlinx.android.synthetic.main.title_fragment.view.*
 
 /**
  * Fragment where the game is played
@@ -53,20 +56,8 @@ class GameFragment : Fragment() {
         Log.i("GameFragment", "Called ViewModelProviders.of!");
         viewModel = ViewModelProviders.of(this).get(GameViewModel::class.java);
 
-        binding.correctButton.setOnClickListener {
-            viewModel.onCorrect();
-        }
-        binding.skipButton.setOnClickListener {
-            viewModel.onSkip();
-        }
-
-        viewModel.score.observe(this, Observer { score: Int ->
-            binding.scoreText.text = score.toString()
-        });
-
-        viewModel.word.observe(this, Observer { word: String ->
-           binding.wordText.text = word;
-        });
+        binding.gameViewModel = viewModel;
+        binding.setLifecycleOwner(this);
 
         viewModel.gameFinishEvent.observe(this, Observer {
             if (it) {
@@ -74,6 +65,14 @@ class GameFragment : Fragment() {
                 viewModel.gameFinishCompleted();
             }
         });
+
+        viewModel.buzzEvent.observe(this, Observer {
+            if (it != BuzzType.NO_BUZZ) {
+                buzz(it.pattern);
+                viewModel.clearBuzzEvent();
+            }
+        });
+
 
         return binding.root
 
@@ -85,5 +84,16 @@ class GameFragment : Fragment() {
     private fun gameFinished() {
         val action = GameFragmentDirections.actionGameToScore(viewModel.score.value ?: 0);
         findNavController(this).navigate(action);
+    }
+
+    private fun buzz(pattern: LongArray) {
+        val buzzer = activity?.getSystemService<Vibrator>();
+        buzzer?.let{
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                buzzer.vibrate(VibrationEffect.createWaveform(pattern, -1));
+            } else {
+                buzzer.vibrate(pattern, -1);
+            }
+        }
     }
 }
