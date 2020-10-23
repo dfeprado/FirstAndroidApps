@@ -18,6 +18,7 @@ package com.example.android.trackmysleepquality.sleeptracker
 
 import android.app.Application
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -60,6 +61,16 @@ class SleepTrackerFragment : Fragment() {
             night?.let {
                 this.findNavController().navigate(SleepTrackerFragmentDirections.actionSleepTrackerFragmentToSleepQualityFragment(night?.nightId));
 
+            }
+        });
+
+        val adapter = SleepNightAdapter();
+        binding.sleepList.adapter = adapter;
+
+        viewModel.nights.observe(this.viewLifecycleOwner, Observer {
+            it?.let {
+                adapter.data = it;
+                Log.i("DEBUG", "Adapter updated. There're ${adapter.data.size}/${it.size} itens in dataset");
             }
         });
 
