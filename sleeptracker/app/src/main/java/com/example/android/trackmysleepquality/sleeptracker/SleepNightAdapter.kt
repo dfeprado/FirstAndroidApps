@@ -1,14 +1,19 @@
 package com.example.android.trackmysleepquality.sleeptracker
 
+import android.graphics.Color
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.android.trackmysleepquality.R
 import com.example.android.trackmysleepquality.TextItemViewHolder
+import com.example.android.trackmysleepquality.convertDurationToFormatted
+import com.example.android.trackmysleepquality.convertNumericQualityToString
 import com.example.android.trackmysleepquality.database.SleepNight
 
-class SleepNightAdapter: RecyclerView.Adapter<TextItemViewHolder>() {
+class SleepNightAdapter: RecyclerView.Adapter<SleepNightAdapter.ViewHolder>() {
     var data = listOf<SleepNight>()
         set(value) {
             field = value;
@@ -17,14 +22,33 @@ class SleepNightAdapter: RecyclerView.Adapter<TextItemViewHolder>() {
 
     override fun getItemCount() = data.size;
 
-    override fun onBindViewHolder(holder: TextItemViewHolder, position: Int): Unit {
-        val item = data[position];
-        holder.textView.text = item.sleepQuality.toString();
+    override fun onBindViewHolder(holder: ViewHolder, position: Int): Unit {
+        val item: SleepNight = data[position];
+        val res = holder.itemView.resources;
+        holder.sleepNightDuration.text = convertDurationToFormatted(item.startTimeMilli, item.endTimeMilli, res);
+        holder.sleepQualityText.text = convertNumericQualityToString(item.sleepQuality, res);
+        holder.sleepQualityIcon.setImageResource(
+                when(item.sleepQuality) {
+                    0 -> R.drawable.ic_sleep_0;
+                    1 -> R.drawable.ic_sleep_1;
+                    2 -> R.drawable.ic_sleep_2;
+                    3 -> R.drawable.ic_sleep_3;
+                    4 -> R.drawable.ic_sleep_4;
+                    5 -> R.drawable.ic_sleep_5;
+                    else -> R.drawable.sleep_active;
+                }
+        );
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TextItemViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context);
-        val view = layoutInflater.inflate(R.layout.text_item_view, parent, false) as TextView;
-        return TextItemViewHolder(view);
+        val view = layoutInflater.inflate(R.layout.sleep_night_list_item, parent, false);
+        return ViewHolder(view);
+    }
+
+    class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+        val sleepQualityIcon: ImageView = itemView.findViewById(R.id.sleep_night_icon);
+        val sleepQualityText: TextView = itemView.findViewById(R.id.sleep_night_quality);
+        val sleepNightDuration: TextView = itemView.findViewById(R.id.sleep_night_duration);
     }
 }
