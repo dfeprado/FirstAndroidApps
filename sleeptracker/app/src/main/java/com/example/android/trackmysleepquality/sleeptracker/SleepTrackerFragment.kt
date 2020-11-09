@@ -69,8 +69,7 @@ class SleepTrackerFragment : Fragment() {
 
         viewModel.nights.observe(this.viewLifecycleOwner, Observer {
             it?.let {
-                adapter.data = it;
-                Log.i("DEBUG", "Adapter updated. There're ${adapter.data.size}/${it.size} itens in dataset");
+                adapter.submitList(it);
             }
         });
 
